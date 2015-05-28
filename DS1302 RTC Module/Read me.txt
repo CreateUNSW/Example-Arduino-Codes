@@ -1,0 +1,62 @@
+Note with our RTC Modules
+
+-----------------------------------------------------------
+-----------------------Connecting--------------------------
+-----------------------------------------------------------
+
+on the RTC, the following labels and their equivalent naming:
+--------------
+| SCLK | CLK |	Clock Pin
+| Data | IO  |	Data pin
+| RST  | CE  |	Chip Enable Pin
+--------------
+
+-----------------------------------------------------------
+-----------------------Syncing Clock-----------------------
+-----------------------------------------------------------
+
+Do not plug the voltage and ground into the normal pins,
+just plug them into the regulated 5v output from the arduino
+and the ground on the arduino.
+ignore the two #defines, for some reason if the RTC is plugged
+into those pins, it causes problems syncing.
+
+Syncing can be done by opening serial monitor, using the correct
+baud rate: 115200
+and then entering
+yy,mm,dd,hh,mm,ss,
+note that it is 24 hour time and that the year is the last two
+digits only.
+
+
+------------------------------------------------------------
+-----------------------Using--------------------------------
+------------------------------------------------------------
+
+Include the following Library
+#include <Time.h>  
+#include <Wire.h>  
+#include <DS1302RTC.h>
+
+Next declare the pins it is connected to
+DS1302RTC RTC(CE, IO, CLK);
+
+Get time from RTC
+setSyncProvider(RTC.get);
+
+The following functions will call for the values:
+	hour()
+	minute()
+	second()
+	day()
+	month()
+	year()
+
+Optional Code:
+The following code will allow you to make sure that an error message pops up if the RTC time is not set.
+
+	if(timeStatus()!= timeSet){
+		Serial.println("Unable to sync with the RTC, Please Set RTC up");
+	} else {
+		Serial.println("RTC has set the system time");
+	}
